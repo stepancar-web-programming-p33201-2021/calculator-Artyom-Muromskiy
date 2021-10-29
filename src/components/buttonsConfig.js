@@ -12,8 +12,13 @@ export const ops = {
     '-': (a, b) => a - b,
     '*': (a, b) => a * b,
     '%': (a, b) => a / b,
+    '/': (a, b) => a/ b,
     '^': (a, b) => Math.pow(a, b)
 }
+
+export const specialKeys = ['Enter', 'Backspace']
+export const nums = /[0-9.]/;
+export const operations = /[+\-/*%^=]/;
 
 export const btns = [
     {
