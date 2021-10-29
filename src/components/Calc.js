@@ -96,7 +96,7 @@ class Calc extends React.Component {
                 target: {className: BTN_ACTIONS.CALC}
             })
         } else if (operations.test(inSymbol.toString())) {
-            this.setState({value: this.state.value.substr(0, value.lenghth - 1)});
+            this.setState({value: this.state.value.toString().substr(0, this.state.value.length - 1)});
             this.handleClick({
                 target: {
                     className: BTN_ACTIONS.OP,
@@ -104,7 +104,7 @@ class Calc extends React.Component {
                 }
             });
         } else if(!nums.test(inSymbol)) {
-            this.setState({value: this.state.value.substr(0, this.state.value.lenghth - 1)});
+            this.setState({value: this.state.value.toString().substr(0, this.state.value.length - 1)});
         } else {
             this.handleClick ({
                 target: {
@@ -126,7 +126,7 @@ class Calc extends React.Component {
         }
         if (key == 'Backspace') {
             e.preventDefault()
-            this.setState({value: this.state.value.length == 1 ? '0' : this.state.value.substr(0, this.state.value.length - 1)});
+            this.setState({value: this.state.value.length == 1 ? '0' : this.state.value.toString().substr(0, this.state.value.length - 1)});
         }
         if (!specialKeys.includes(key) && !operations.test(key) && !nums.test(key)) {
             e.preventDefault()
