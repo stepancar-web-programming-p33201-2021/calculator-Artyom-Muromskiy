@@ -9,7 +9,6 @@ class Button extends React.Component {
     }
 
     render() {
-        const type = this.state.type
         return(
             <button className={this.props.type} onClick={this.props.onClick}>
                 {this.props.symbol}
