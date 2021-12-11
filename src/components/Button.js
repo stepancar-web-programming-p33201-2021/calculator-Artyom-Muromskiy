@@ -3,7 +3,6 @@ import React from 'react';
 class Button extends React.Component {
     constructor(props) {
         super(props);
-        const operations = /[+-/*=%^]/;
         this.state = {
             symbol: props.symbol,
         }

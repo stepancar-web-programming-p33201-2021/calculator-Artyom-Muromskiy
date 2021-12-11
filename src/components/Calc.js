@@ -7,22 +7,19 @@ class Calc extends React.Component {
     
     constructor(props) {
         super(props);
-        this.handleClick = this.handleClick.bind(this);
-        this.inputChange = this.inputChange.bind(this);
-        this.specialButtons = this.specialButtons.bind(this);
         this.state = {
             memory: 0.0,
-            current_val: 0.0,
+            currentVal: 0.0,
             value: '0',
-            current_operation: ""
+            currentOperation: ""
         }
     }
 
-    handleClick(item) {
+    handleClick = (item) => {
         if (item.target.className === BTN_ACTIONS.ADD) {
             const value = item.target.innerText
-            if (this.state.value == '0') {
-                this.setState({value: item.target.value == '0' ? this.state.value : value});   
+            if (this.state.value === '0') {
+                this.setState({value: item.target.value === '0' ? this.state.value : value});
             } else {
                 this.setState({value: (this.state.value + value)});
             }
@@ -38,31 +35,31 @@ class Calc extends React.Component {
         }
 
         if (item.target.className === BTN_ACTIONS.OP) {
-            if (this.state.current_operation != '') {
+            if (this.state.currentOperation !== '') {
                 this.setState({
-                    current_val: ops[this.state.current_operation](this.state.current_val, parseFloat(this.state.value)),
+                    currentVal: ops[this.state.currentOperation](this.state.currentVal, parseFloat(this.state.value)),
                     value:'0',
-                    current_operation: item.target.innerText !== 'x^y' ? item.target.innerText : '^'
+                    currentOperation: item.target.innerText !== 'x^y' ? item.target.innerText : '^'
                 })
             } else {
                 this.setState({
-                    current_val: parseFloat(this.state.value),
+                    currentVal: parseFloat(this.state.value),
                     value: '0',
-                    current_operation: item.target.innerText !== 'x^y' ? item.target.innerText : '^'
+                    currentOperation: item.target.innerText !== 'x^y' ? item.target.innerText : '^'
                 })
             }
         }
 
-        if (item.target.className == BTN_ACTIONS.CALC) {
-            if (this.state.current_operation != '') {
-                const new_val = ops[this.state.current_operation](this.state.current_val, parseFloat(this.state.value))
+        if (item.target.className === BTN_ACTIONS.CALC) {
+            if (this.state.currentOperation !== '') {
+                const newVal = ops[this.state.currentOperation](this.state.currentVal, parseFloat(this.state.value))
                 this.setState({
-                    current_val: new_val,
-                    value: new_val,
-                    current_operation: '' 
+                    currentVal: newVal,
+                    value: newVal,
+                    currentOperation: '' 
                 })
             } else {
-                this.setState({current_val: parseFloat(this.state.value)})
+                this.setState({currentVal: parseFloat(this.state.value)})
             }
         }
 
@@ -70,28 +67,28 @@ class Calc extends React.Component {
             if (item.target.innerText === 'clear') {
                 this.setState({
                     value: '0',
-                    current_val: 0.0,
-                    current_operation: ''
+                    currentVal: 0.0,
+                    currentOperation: ''
                 })
             } else {
                 this.setState({
                     value: '0',
-                    current_val: 0.0,
-                    current_operation: '',
+                    currentVal: 0.0,
+                    currentOperation: '',
                     memory: 0.0
                 })
             }
         }
     }
 
-    inputChange(e) {
+    inputChange = (e) => {
         
         const value = e.target.value;
         const inSymbol = value.charAt(value.length - 1);
         //TODO make autofocus on end
 
 
-        if (inSymbol == '=') {
+        if (inSymbol === '=') {
             this.handleClick({
                 target: {className: BTN_ACTIONS.CALC}
             })
@@ -116,7 +113,7 @@ class Calc extends React.Component {
         }
     }
 
-    specialButtons(e) {
+    specialButtons = (e) => {
         const key = e.key;
         if (key === 'Enter') {
             e.preventDefault();
@@ -124,9 +121,9 @@ class Calc extends React.Component {
                 target: {className: BTN_ACTIONS.CALC}
             })
         }
-        if (key == 'Backspace') {
+        if (key === 'Backspace') {
             e.preventDefault()
-            this.setState({value: this.state.value.length == 1 ? '0' : this.state.value.toString().substr(0, this.state.value.length - 1)});
+            this.setState({value: this.state.value.length === 1 ? '0' : this.state.value.toString().substr(0, this.state.value.length - 1)});
         }
         if (!specialKeys.includes(key) && !operations.test(key) && !nums.test(key)) {
             e.preventDefault()
@@ -137,8 +134,8 @@ class Calc extends React.Component {
 
         return(
             <div className='calc'>
-                <output value={this.state.current_val + this.state.current_operation}>
-                    {this.state.current_val + this.state.current_operation}
+                <output value={this.state.currentVal + this.state.currentOperation}>
+                    {this.state.currentVal + this.state.currentOperation}
                 </output>
                 <br/>
                 <input value={this.state.value} onKeyDown={this.specialButtons} onChange={this.inputChange}/>
