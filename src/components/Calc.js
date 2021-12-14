@@ -5,18 +5,19 @@ import {btns, BTN_ACTIONS, ops, specialKeys, nums, operations} from './buttonsCo
 
 class Calc extends React.Component {
     
-    constructor(props) {
-        super(props);
-        this.state = {
-            memory: 0.0,
-            currentVal: 0.0,
-            value: '0',
-            currentOperation: ""
-        }
+    
+    state = {
+        memory: 0.0,
+        currentVal: 0.0,
+        value: '0',
+        currentOperation: ""
     }
+    
 
-    handleClick = (item) => {
-        if (item.target.className === BTN_ACTIONS.ADD) {
+    handleClick = (item, btnType) => {
+        console.log("we're handling click")
+        console.log(btnType)
+        if (btnType === BTN_ACTIONS.ADD) {
             const value = item.target.innerText
             if (this.state.value === '0') {
                 this.setState({value: item.target.value === '0' ? this.state.value : value});
@@ -24,7 +25,7 @@ class Calc extends React.Component {
                 this.setState({value: (this.state.value + value)});
             }
         }
-        if (item.target.className === BTN_ACTIONS.MEMORY) {
+        if (btnType === BTN_ACTIONS.MEMORY) {
             if (item.target.innerText === 'M+') {
                 this.setState({memory: this.state.memory + parseFloat(this.state.value)})
             } else if (item.target.innerText === 'M-') {
@@ -34,7 +35,7 @@ class Calc extends React.Component {
             }
         }
 
-        if (item.target.className === BTN_ACTIONS.OP) {
+        if (btnType === BTN_ACTIONS.OP) {
             if (this.state.currentOperation !== '') {
                 this.setState({
                     currentVal: ops[this.state.currentOperation](this.state.currentVal, parseFloat(this.state.value)),
@@ -50,7 +51,7 @@ class Calc extends React.Component {
             }
         }
 
-        if (item.target.className === BTN_ACTIONS.CALC) {
+        if (btnType === BTN_ACTIONS.CALC) {
             if (this.state.currentOperation !== '') {
                 const newVal = ops[this.state.currentOperation](this.state.currentVal, parseFloat(this.state.value))
                 this.setState({
@@ -63,7 +64,7 @@ class Calc extends React.Component {
             }
         }
 
-        if (item.target.className === BTN_ACTIONS.DELETE) {
+        if (btnType === BTN_ACTIONS.DELETE) {
             if (item.target.innerText === 'clear') {
                 this.setState({
                     value: '0',
@@ -87,28 +88,29 @@ class Calc extends React.Component {
         const inSymbol = value.charAt(value.length - 1);
         //TODO make autofocus on end
 
+        console.log("we're in inputChange")
 
         if (inSymbol === '=') {
             this.handleClick({
-                target: {className: BTN_ACTIONS.CALC}
-            })
+                target: {id: BTN_ACTIONS.CALC}
+            }, BTN_ACTIONS.CALC)
         } else if (operations.test(inSymbol.toString())) {
             this.setState({value: this.state.value.toString().substr(0, this.state.value.length - 1)});
             this.handleClick({
                 target: {
-                    className: BTN_ACTIONS.OP,
+                    id: BTN_ACTIONS.OP,
                     innerText: inSymbol.toString()
                 }
-            });
+            }, BTN_ACTIONS.OP);
         } else if(!nums.test(inSymbol)) {
             this.setState({value: this.state.value.toString().substr(0, this.state.value.length - 1)});
         } else {
             this.handleClick ({
                 target: {
-                    className: BTN_ACTIONS.ADD,
+                    id: BTN_ACTIONS.ADD,
                     innerText: inSymbol
                 }
-            })
+            }, BTN_ACTIONS.ADD)
             //this.setState({value: value});
         }
     }
@@ -118,8 +120,8 @@ class Calc extends React.Component {
         if (key === 'Enter') {
             e.preventDefault();
             this.handleClick({
-                target: {className: BTN_ACTIONS.CALC}
-            })
+                target: {id: BTN_ACTIONS.CALC}
+            }, BTN_ACTIONS.CALC)
         }
         if (key === 'Backspace') {
             e.preventDefault()
@@ -133,7 +135,7 @@ class Calc extends React.Component {
     render(){
 
         return(
-            <div className='calc'>
+            <div id='calc'>
                 <output value={this.state.currentVal + this.state.currentOperation}>
                     {this.state.currentVal + this.state.currentOperation}
                 </output>
@@ -144,9 +146,9 @@ class Calc extends React.Component {
                         btns.map((item, index) => (
                             <Button
                             key={index}
-                            type={item.action} 
+                             
                             symbol={item.display}
-                            onClick={(item) => this.handleClick(item)}
+                            onClick={(i) => this.handleClick(i, item.action)}
                             />
                         ))
                     }
